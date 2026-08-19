@@ -1,0 +1,27 @@
+# EduBridge — Environment
+.env
+.*.env
+!.env.example
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Build output
+dist/
+
+# Vite
+.vite/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

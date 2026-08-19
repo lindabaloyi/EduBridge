@@ -1,0 +1,53 @@
+// Traditional South African (CAPS-aligned) subjects: [name, code]
+export const TRADITIONAL_SUBJECTS = [
+  // Languages — Home Language
+  ["English", "ENG-HL"],
+  ["Afrikaans", "AFR-HL"],
+  ["isiZulu", "ZUL-HL"],
+  ["isiXhosa", "XHO-HL"],
+  ["Sepedi", "NSO-HL"],
+  ["Sesotho", "SOT-HL"],
+  ["Setswana", "TSN-HL"],
+  ["siSwati", "SSW-HL"],
+  ["Tshivenda", "VEN-HL"],
+  ["Xitsonga", "TSO-HL"],
+  ["isiNdebele", "NBL-HL"],
+  // Languages - First Additional
+  ["English (First Additional)", "ENG-FAL"],
+  ["Afrikaans (First Additional)", "AFR-FAL"],
+  ["isiZulu (First Additional)", "ZUL-FAL"],
+  ["isiXhosa (First Additional)", "XHO-FAL"],
+  // Mathematics & Sciences
+  ["Mathematics", "MATH"],
+  ["Mathematical Literacy", "MATLIT"],
+  ["Physical Sciences", "PHYSCI"],
+  ["Life Sciences", "LIFESCI"],
+  ["Natural Sciences and Technology", "NSTECH"],
+  // Humanities & Business
+  ["Accounting", "ACC"],
+  ["Business Studies", "BUSST"],
+  ["Economics", "ECON"],
+  ["Geography", "GEOG"],
+  ["History", "HIST"],
+  ["Life Orientation", "LIFEO"],
+  ["Tourism", "TOUR"],
+  ["Social Sciences", "SOCSC"],
+  ["Economic and Management Sciences", "EMS"],
+  // Agricultural & Technical
+  ["Agricultural Sciences", "AGRI"],
+  ["Agricultural Technology", "AGTECH"],
+  ["Information Technology", "ITECH"],
+  ["Computer Applications Technology", "CAT"],
+  ["Engineering Graphics and Design", "EGD"],
+  ["Technology", "TECH"],
+  // Arts & Consumer
+  ["Creative Arts", "CREART"],
+  ["Visual Arts", "VAART"],
+  ["Dramatic Arts", "DRAMA"],
+  ["Music", "MUSIC"],
+  ["Dance Studies", "DANCE"],
+  ["Design", "DESIGN"],
+  ["Consumer Studies", "CONSUM"],
+  ["Hospitality Studies", "HOSPIT"],
+  ["Religious Studies", "RELIGION"],
+];

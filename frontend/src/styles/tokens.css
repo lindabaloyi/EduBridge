@@ -1,0 +1,18 @@
+/* EduBridge design tokens — Elmridge Registry palette */
+:root {
+  --ink: #1D2B3A;
+  --ink-soft: #2C3E52;
+  --paper: #EFEAE0;
+  --paper-dark: #E4DDCE;
+  --card-paper: #F8F5EE;
+  --brass: #9C7A3C;
+  --brass-light: #D8C39A;
+  --sage: #5C7A5E;
+  --sage-light: #DCE6DC;
+  --rust: #A6432F;
+  --rust-light: #F0DAD3;
+  --hairline: #C9C0AC;
+
+  --font-serif: 'Lora', Georgia, serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
