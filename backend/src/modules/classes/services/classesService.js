@@ -26,7 +26,13 @@ export async function listClasses({ grade } = {}) {
     include: { _count: { select: { students: true } } },
     orderBy: { name: "asc" },
   });
-  return list.map((c) => ({ id: c.id, name: c.name, grade: c.grade, schoolId: c.schoolId, studentCount: c._count.students }));
+  return list.map((c) => ({ 
+    id: c.id, 
+    name: c.name, 
+    grade: c.grade, 
+    schoolId: c.schoolId, 
+    studentCount: c._count.students 
+  }));
 }
 
 export async function getClassById(id) {
@@ -72,10 +78,39 @@ export async function deleteClass(id) {
   return { id };
 }
 
+// ✅ Get students for attendance - only basic info needed
 export async function getClassStudents(classId) {
-  const students = await prisma.student.findMany({
-    where: { classId },
-    orderBy: [{ lastName: "asc" }, { firstName: "asc" }],
+  console.log('📡 Fetching students for class:', classId);
+  
+  // Check if class exists
+  const classExists = await prisma.class.findUnique({
+    where: { id: classId },
+    select: { id: true, name: true }
   });
-  return students.map((s) => ({ id: s.id, studentNo: s.studentNo, firstName: s.firstName, lastName: s.lastName }));
+
+  if (!classExists) {
+    throw Object.assign(new Error("Class not found"), { status: 404 });
+  }
+
+  // Get students - only what we need for attendance
+  const students = await prisma.student.findMany({
+    where: { 
+      classId: classId 
+    },
+    orderBy: [
+      { lastName: "asc" }, 
+      { firstName: "asc" }
+    ],
+    select: {
+      id: true,
+      studentNo: true,
+      firstName: true,
+      lastName: true,
+      // Only these 4 fields needed for attendance
+    }
+  });
+
+  console.log(`✅ Found ${students.length} students`);
+
+  return students;
 }
