@@ -8,6 +8,7 @@ import { gradebookRoutes } from "../modules/gradebook/routes/gradebookRoutes.js"
 import { classesRoutes } from "../modules/classes/routes/classesRoutes.js"
 import { subjectsRoutes } from "../modules/subjects/routes/subjectsRoutes.js"
 import { communicationRoutes } from "../modules/communication/routes/communicationRoutes.js"
+import { teachersRoutes } from "../modules/teachers/routes/teachersRoutes.js"
 const router = Router()
 
 router.use("/students", studentsRoutes)
@@ -16,6 +17,7 @@ router.use("/gradebook", gradebookRoutes)
 router.use("/classes", classesRoutes)
 router.use("/subjects", subjectsRoutes)
 router.use("/communication", communicationRoutes)
+router.use("/teachers", teachersRoutes)
 
 // Reference data (terms)
 router.use(referenceRoutes)

@@ -3,6 +3,7 @@ import { theme } from "../../styles/themes";
 import {
   LayoutDashboard,
   Users,
+  Briefcase,
   ClipboardCheck,
   BookOpen,
   GraduationCap,
@@ -18,6 +19,7 @@ const { serif, mono } = theme.fonts;
 const NAV = [
   { key: "dashboard", label: "Dashboard", icon: LayoutDashboard, path: "/" },
   { key: "students", label: "Students", icon: Users, path: "/students" },
+  { key: "teachers", label: "Teachers", icon: Briefcase, path: "/teachers" },
   { key: "attendance", label: "Attendance", icon: ClipboardCheck, path: "/attendance" },
   { key: "classes", label: "Classes", icon: BookOpen, path: "/classes" },
   { key: "subjects", label: "Subjects", icon: Library, path: "/subjects" },
