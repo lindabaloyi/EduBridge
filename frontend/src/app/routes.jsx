@@ -8,6 +8,7 @@ import ClassesPage from "../features/classes/pages/ClassesPage";
 import AssessmentsPage from "../features/assessments/pages/AssessmentsPage";
 import GradebookPage from "../features/gradebook/pages/GradebookPage";
 import SubjectsPage from "../features/subjects/pages/SubjectsPage";
+import CommunicationPage from "../features/communication/pages/CommunicationPage";
 
 function NotFoundPage() {
   return (
@@ -40,6 +41,7 @@ function AppRoutes() {
           <Route path="/assessments" element={<AssessmentsPage />} />
           <Route path="/grades" element={<GradebookPage />} />
           <Route path="/gradebook" element={<GradebookPage />} />
+          <Route path="/communication" element={<CommunicationPage />} />
         </Route>
 
         <Route path="/404" element={<NotFoundPage />} />

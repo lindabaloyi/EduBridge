@@ -2,9 +2,10 @@ import { useMemo, useRef, useState } from "react";
 import { Download, FileUp, Lock, Save } from "lucide-react";
 import { SectionTitle } from "../../../components/common/SectionTitle";
 import { theme } from "../../../styles/themes";
-import { useReferences } from "../hooks/useReferences";
-import { useGradebook, bulkSaveMarks, importMarks, finalizeBook, exportUrl } from "../hooks/useGradebook";
-import { toImportRows } from "../utils/gradeCsv";
+import { useReferences } from "../../../hooks/useReferences";
+import { useGradebook } from "../../../hooks/useGradebook";
+import { bulkSaveMarks, importMarks, finalizeBook, exportUrl } from "../../../api/gradebook";
+import { toImportRows } from "../../../utils/gradeCsv";
 import GradebookSheet from "../components/GradebookSheet";
 
 const { ink, cardPaper, hairline, brass, rust, sage } = theme.colors;

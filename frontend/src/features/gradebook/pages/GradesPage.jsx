@@ -1,5 +1,5 @@
 import { SectionTitle } from "../../../components/common/SectionTitle";
-import { letterTone } from "../../../components/common/letterTone";
+import { letterTone } from "../../../utils/letterTone";
 import { theme } from "../../../styles/themes";
 
 const { ink, cardPaper, hairline } = theme.colors;

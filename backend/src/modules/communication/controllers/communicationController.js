@@ -10,6 +10,7 @@ import {
   sendMessage,
   markMessageRead,
   deleteMessage,
+  listGuardiansForClasses,
 } from "../services/communicationService.js";
 
 // ── Announcements & Notices ────────────────────────────────
@@ -110,6 +111,16 @@ export async function handleDeleteMessage(req, res, next) {
   try {
     await deleteMessage(req.params.id);
     res.status(204).send();
+  } catch (err) {
+    next(err);
+  }
+}
+
+// ── Recipients (guardians) ─────────────────────────────────
+export async function handleListGuardians(req, res, next) {
+  try {
+    const items = await listGuardiansForClasses(req.query.classIds, req.query.schoolId);
+    res.json({ success: true, count: items.length, data: items });
   } catch (err) {
     next(err);
   }

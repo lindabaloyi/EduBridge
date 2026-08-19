@@ -2,19 +2,13 @@ import { useState } from "react";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { SectionTitle } from "../../../components/common/SectionTitle";
 import { theme } from "../../../styles/themes";
-import { useSubjects, createSubject, updateSubject, deleteSubject } from "../hooks/useSubjects";
+import { useSubjects } from "../../../hooks/useSubjects";
+import { createSubject, updateSubject, deleteSubject } from "../../../api/subjects";
+import { friendlyError } from "../../../utils/errors";
 import SubjectFormModal from "../components/SubjectFormModal";
 
 const { ink, cardPaper, hairline, brass, rust, sage, sageLight } = theme.colors;
 const { serif, mono } = theme.fonts;
-
-function friendlyError(msg) {
-  const m = String(msg || "");
-  if (/failed to fetch|networkerror|load failed|econnrefused|econnreset|connect/i.test(m)) {
-    return "The backend API is unreachable. Start it with `cd backend && npm run dev`, then Retry.";
-  }
-  return m;
-}
 
 export default function SubjectsPage() {
   const { data: subjects, loading, error, refresh } = useSubjects();

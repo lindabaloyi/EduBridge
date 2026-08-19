@@ -121,6 +121,41 @@ export async function deleteAnnouncement(id) {
   await prisma.announcement.delete({ where: { id } });
   return { id };
 }
+// ── Recipients (guardians) ─────────────────────────────────
+export async function listGuardiansForClasses(classIds = [], schoolId) {
+  const ids = (Array.isArray(classIds) ? classIds : String(classIds).split(","))
+    .map((s) => String(s).trim())
+    .filter(Boolean);
+  if (ids.length === 0) return [];
+  const resolvedSchoolId = await resolveSchoolId(schoolId);
+
+  const students = await prisma.student.findMany({
+    where: { schoolId: resolvedSchoolId, classId: { in: ids } },
+    include: { parent: true, class: true },
+    orderBy: [{ lastName: "asc" }, { firstName: "asc" }],
+  });
+
+  const seen = new Set();
+  const picked = [];
+  for (const s of students) {
+    const email = s.parent?.email;
+    if (!email) continue; // no guardian email on record
+    if (seen.has(email)) continue;
+    seen.add(email);
+    picked.push({
+      email,
+      name: s.parent
+        ? `${s.parent.firstName} ${s.parent.lastName}`
+        : s.guardianName || `${s.firstName} ${s.lastName}`,
+      studentId: s.id,
+      studentName: `${s.firstName} ${s.lastName}`,
+      className: s.class ? s.class.name : null,
+      relationship: "GUARDIAN",
+    });
+  }
+  return picked;
+}
+
 // ── Messages ───────────────────────────────────────────────
 function serializeMessage(m) {
   let recipient = null;

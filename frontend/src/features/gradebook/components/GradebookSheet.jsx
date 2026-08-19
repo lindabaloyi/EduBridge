@@ -1,5 +1,5 @@
 import { theme } from "../../../styles/themes";
-import { letterTone } from "../../../components/common/letterTone";
+import { letterTone } from "../../../utils/letterTone";
 
 const { ink, cardPaper, hairline, brass, rust } = theme.colors;
 const { serif, mono } = theme.fonts;

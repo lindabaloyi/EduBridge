@@ -8,6 +8,7 @@ import {
   GraduationCap,
   FileText,
   Library,
+  Send,
   ChevronRight,
 } from "lucide-react";
 
@@ -22,6 +23,7 @@ const NAV = [
   { key: "subjects", label: "Subjects", icon: Library, path: "/subjects" },
   { key: "assessments", label: "Assessments", icon: FileText, path: "/assessments" },
   { key: "grades", label: "Gradebook", icon: GraduationCap, path: "/gradebook" },
+  { key: "communication", label: "Communication", icon: Send, path: "/communication" },
 ];
 
 const brass = theme.colors.brass;

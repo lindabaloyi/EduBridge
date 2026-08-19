@@ -47,7 +47,6 @@ export default function StudentFormModal({
   const isEdit = Boolean(student);
 
   const [form, setForm] = useState({
-    studentNo: student?.studentNo ?? "",
     firstName: student?.firstName ?? "",
     lastName: student?.lastName ?? "",
     gender: student?.gender ?? "",
@@ -66,14 +65,12 @@ export default function StudentFormModal({
   function handleSubmit(e) {
     e.preventDefault();
     const nextErrors = {};
-    if (!form.studentNo.trim()) nextErrors.studentNo = "Student number is required";
     if (!form.firstName.trim()) nextErrors.firstName = "First name is required";
     if (!form.lastName.trim()) nextErrors.lastName = "Last name is required";
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
     onSubmit({
-      studentNo: form.studentNo,
       firstName: form.firstName,
       lastName: form.lastName,
       gender: form.gender || null,
@@ -114,30 +111,21 @@ export default function StudentFormModal({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-3">
-<div className="grid grid-cols-2 gap-3">
-            <Field label="Student No" required error={errors.studentNo}>
-              <input
-                value={form.studentNo}
-                onChange={set("studentNo")}
-                placeholder="STU-1050"
-                style={inputStyle(errors.studentNo)}
-              />
-            </Field>
-            <Field label="Gender">
-              <select
-                value={form.gender}
-                onChange={set("gender")}
-                style={inputStyle(false)}
-              >
-                <option value="">—</option>
-                <option value="Female">Female</option>
-                <option value="Male">Male</option>
-                <option value="Non-binary">Non-binary</option>
-              </select>
-            </Field>
+        {!isEdit && (
+          <div 
+            className="mb-4 px-3 py-2 text-sm"
+            style={{ 
+              background: "#E8F0E9", 
+              color: "#4A7C59", 
+              borderRadius: 4,
+              fontFamily: mono,
+            }}
+          >
+            ℹ️ Student number will be automatically assigned by the system.
           </div>
+        )}
 
+        <form onSubmit={handleSubmit} className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <Field label="First Name" required error={errors.firstName}>
               <input
@@ -158,14 +146,16 @@ export default function StudentFormModal({
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <Field label="Class">
-              <select value={form.classId} onChange={set("classId")} style={inputStyle(false)}>
-                <option value="">Unassigned</option>
-                {classes.map((c) => (
-                  <option key={c.value} value={c.value}>
-                    {c.label}
-                  </option>
-                ))}
+            <Field label="Gender">
+              <select
+                value={form.gender}
+                onChange={set("gender")}
+                style={inputStyle(false)}
+              >
+                <option value="">—</option>
+                <option value="Female">Female</option>
+                <option value="Male">Male</option>
+                <option value="Non-binary">Non-binary</option>
               </select>
             </Field>
             <Field label="Date of Birth">
@@ -179,6 +169,16 @@ export default function StudentFormModal({
           </div>
 
           <div className="grid grid-cols-2 gap-3">
+            <Field label="Class">
+              <select value={form.classId} onChange={set("classId")} style={inputStyle(false)}>
+                <option value="">Unassigned</option>
+                {classes.map((c) => (
+                  <option key={c.value} value={c.value}>
+                    {c.label}
+                  </option>
+                ))}
+              </select>
+            </Field>
             <Field label="Guardian Name">
               <input
                 value={form.guardianName}
@@ -187,6 +187,9 @@ export default function StudentFormModal({
                 style={inputStyle(false)}
               />
             </Field>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
             <Field label="Guardian Phone">
               <input
                 value={form.guardianPhone}
@@ -195,9 +198,6 @@ export default function StudentFormModal({
                 style={inputStyle(false)}
               />
             </Field>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
             <Field label="Attendance %">
               <input
                 type="number"
@@ -206,9 +206,13 @@ export default function StudentFormModal({
                 value={form.attendance}
                 onChange={set("attendance")}
                 style={inputStyle(false)}
+                placeholder="85"
               />
             </Field>
-            <Field label="Average">
+          </div>
+
+          <div>
+            <Field label="Average Grade">
               <select value={form.averageGrade} onChange={set("averageGrade")} style={inputStyle(false)}>
                 <option value="">—</option>
                 {["A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D", "F"].map((g) => (
@@ -237,6 +241,7 @@ export default function StudentFormModal({
                 border: `1px solid ${hairline}`,
                 borderRadius: 4,
                 color: ink,
+                cursor: "pointer",
               }}
             >
               Cancel
@@ -251,6 +256,8 @@ export default function StudentFormModal({
                 borderRadius: 4,
                 color: "#fff",
                 fontFamily: mono,
+                cursor: "pointer",
+                opacity: submitting ? 0.7 : 1,
               }}
             >
               {submitting ? "Saving…" : isEdit ? "Save Changes" : "Add Student"}

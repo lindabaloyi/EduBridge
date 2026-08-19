@@ -2,8 +2,8 @@ import { useState, useMemo, useEffect } from "react";
 import { SectionTitle } from "../../../components/common/SectionTitle";
 import { MetricCard } from "../../../components/common/MetricCard";
 import { theme } from "../../../styles/themes";
-import { useClasses } from "../../classes/hooks/useClasses";
-import { useClassStudents } from "../../students/hooks/useClassStudents";
+import { useClasses } from "../../../hooks/useClasses";
+import { useClassStudents } from "../../../hooks/useClassStudents";
 
 const { ink, cardPaper, hairline, sage, sageLight, rust, rustLight } = theme.colors;
 const { mono } = theme.fonts;

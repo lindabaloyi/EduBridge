@@ -1,5 +1,5 @@
 import { Pencil, Trash2 } from "lucide-react";
-import { letterTone } from "../../../components/common/letterTone";
+import { letterTone } from "../../../utils/letterTone";
 import { theme } from "../../../styles/themes";
 
 const { ink, cardPaper, hairline, brass, rust } = theme.colors;

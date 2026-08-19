@@ -1,14 +1,8 @@
 import { Router } from "express";
-import { listTerms } from "../services/referenceService.js";
+import { handleListTerms } from "../controllers/referenceController.js";
 
 const router = Router();
 
-router.get("/terms", async (_req, res, next) => {
-  try {
-    res.json({ success: true, data: await listTerms() });
-  } catch (err) {
-    next(err);
-  }
-});
+router.get("/terms", handleListTerms);
 
 export { router as referenceRoutes };

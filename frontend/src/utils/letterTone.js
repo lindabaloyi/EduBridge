@@ -1,4 +1,4 @@
-import { theme } from "../../styles/themes";
+import { theme } from "../styles/themes";
 
 const { sage, sageLight, brassLight, rustLight, rust } = theme.colors;
 

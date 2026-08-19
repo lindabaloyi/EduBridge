@@ -1,10 +1,7 @@
 import { prisma } from '../../../database/prisma.js';
+import { generateStudentNumber } from '../../../services/studentNumberService.js';
 
 // ── Temporary dev-only configuration ────────────────────────────
-// Before authentication is wired up, the frontend cannot know a school's
-// database CUID. We resolve the seeded development school by its code so the
-// API is self-contained. Once authenticate()/req.user.schoolId exist, this
-// fallback is removed and replaced with the authenticated user's school.
 const DEV_SCHOOL_CODE = "ELM-001";
 
 /**
@@ -43,7 +40,8 @@ async function resolveClassId(classId, schoolId) {
 }
 
 // ── Validation ──────────────────────────────────────────────────
-const REQUIRED_FIELDS = ['studentNo', 'firstName', 'lastName'];
+// REMOVED: studentNo is no longer required (auto-generated)
+const REQUIRED_FIELDS = ['firstName', 'lastName'];
 
 export function validateStudent(data) {
   const errors = {};
@@ -70,6 +68,7 @@ function serialize(student) {
     averageGrade: student.averageGrade,
     classId: student.classId,
     grade: student.class ? student.class.name : null,
+    className: student.class ? student.class.name : null,
     schoolId: student.schoolId,
     school: student.school ? student.school.name : null,
   };
@@ -77,14 +76,17 @@ function serialize(student) {
 
 // ── CRUD: READ ──────────────────────────────────────────────────
 export async function getStudents() {
+  console.log('🔍 Fetching all students...');
   const data = await prisma.student.findMany({
     include: { school: true, class: true },
-    orderBy: { firstName: 'asc' },
+    orderBy: { studentNo: 'asc' },
   });
+  console.log(`✅ Found ${data.length} students`);
   return data.map(serialize);
 }
 
 export async function getStudentById(id) {
+  console.log('🔍 Fetching student by ID:', id);
   const student = await prisma.student.findUnique({
     where: { id },
     include: { school: true, class: true },
@@ -95,8 +97,9 @@ export async function getStudentById(id) {
 
 // ── CRUD: CREATE ────────────────────────────────────────────────
 export async function createStudent(payload) {
+  console.log('📝 Creating new student:', payload);
+  
   const {
-    studentNo,
     firstName,
     lastName,
     dateOfBirth,
@@ -109,6 +112,7 @@ export async function createStudent(payload) {
     schoolId: providedSchoolId,
   } = payload;
 
+  // Validate required fields (studentNo is no longer required)
   const validation = validateStudent(payload);
   if (validation) {
     const err = new Error('Validation failed');
@@ -119,20 +123,27 @@ export async function createStudent(payload) {
 
   const schoolId = await resolveSchoolId(providedSchoolId);
 
+  // 🔥 AUTO-GENERATE STUDENT NUMBER
+  let studentNo = await generateStudentNumber(schoolId); // Changed to 'let'
+  console.log(`📝 Generated student number: ${studentNo}`);
+
+  // Check if student number already exists (shouldn't happen with auto-generation)
   const existing = await prisma.student.findFirst({
     where: { schoolId, studentNo },
   });
+  
   if (existing) {
-    const err = new Error('A student with this student number already exists');
-    err.status = 409;
-    throw err;
+    // If it somehow exists, generate a new one with timestamp
+    const timestamp = Date.now().toString().slice(-6);
+    studentNo = `STU-${timestamp}`; // Now this works because studentNo is 'let'
+    console.log(`⚠️ Duplicate detected, using fallback: ${studentNo}`);
   }
 
   const classId = await resolveClassId(providedClassId, schoolId);
 
   const student = await prisma.student.create({
     data: {
-      studentNo: studentNo.trim(),
+      studentNo, // Use the auto-generated number
       firstName: firstName.trim(),
       lastName: lastName.trim(),
       dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : undefined,
@@ -147,13 +158,15 @@ export async function createStudent(payload) {
     include: { school: true, class: true },
   });
 
+  console.log(`✅ Created student: ${student.firstName} ${student.lastName} (${student.studentNo})`);
   return serialize(student);
 }
 
 // ── CRUD: UPDATE ────────────────────────────────────────────────
 export async function updateStudent(id, payload) {
+  console.log('📝 Updating student:', id, payload);
+  
   const {
-    studentNo,
     firstName,
     lastName,
     dateOfBirth,
@@ -166,6 +179,7 @@ export async function updateStudent(id, payload) {
     schoolId: providedSchoolId,
   } = payload;
 
+  // Validate required fields
   const validation = validateStudent(payload);
   if (validation) {
     const err = new Error('Validation failed');
@@ -183,21 +197,12 @@ export async function updateStudent(id, payload) {
     throw err;
   }
 
-  const duplicate = await prisma.student.findFirst({
-    where: { schoolId, studentNo, id: { not: id } },
-  });
-  if (duplicate) {
-    const err = new Error('A student with this student number already exists');
-    err.status = 409;
-    throw err;
-  }
-
   const classId = await resolveClassId(providedClassId, schoolId);
 
+  // Don't update studentNo - keep the original
   const student = await prisma.student.update({
     where: { id },
     data: {
-      studentNo: studentNo.trim(),
       firstName: firstName.trim(),
       lastName: lastName.trim(),
       dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
@@ -212,11 +217,14 @@ export async function updateStudent(id, payload) {
     include: { school: true, class: true },
   });
 
+  console.log(`✅ Updated student: ${student.firstName} ${student.lastName} (${student.studentNo})`);
   return serialize(student);
 }
 
 // ── CRUD: DELETE ────────────────────────────────────────────────
 export async function deleteStudent(id) {
+  console.log('🗑️ Deleting student:', id);
+  
   const existing = await prisma.student.findUnique({ where: { id } });
   if (!existing) {
     const err = new Error('Student not found');
@@ -225,5 +233,6 @@ export async function deleteStudent(id) {
   }
 
   await prisma.student.delete({ where: { id } });
+  console.log(`✅ Deleted student: ${existing.firstName} ${existing.lastName} (${existing.studentNo})`);
   return { id };
 }

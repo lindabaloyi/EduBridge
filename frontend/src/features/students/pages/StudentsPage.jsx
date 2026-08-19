@@ -2,7 +2,8 @@ import { useMemo, useState } from "react";
 import { Plus, Search } from "lucide-react";
 import { SectionTitle } from "../../../components/common/SectionTitle";
 import { theme } from "../../../styles/themes";
-import { useStudents, createStudent, updateStudent, deleteStudent } from "../hooks/useStudents";
+import { useStudents } from "../../../hooks/useStudents";
+import { createStudent, updateStudent, deleteStudent } from "../../../api/students";
 import StudentCard from "../components/StudentCard";
 import StudentFormModal from "../components/StudentFormModal";
 

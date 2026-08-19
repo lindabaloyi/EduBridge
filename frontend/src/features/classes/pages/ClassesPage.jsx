@@ -2,19 +2,13 @@ import { useState } from "react";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { SectionTitle } from "../../../components/common/SectionTitle";
 import { theme } from "../../../styles/themes";
-import { useClasses, createClass, updateClass, deleteClass } from "../hooks/useClasses";
+import { useClasses } from "../../../hooks/useClasses";
+import { createClass, updateClass, deleteClass } from "../../../api/classes";
+import { friendlyError } from "../../../utils/errors";
 import ClassFormModal from "../components/ClassFormModal";
 
 const { ink, cardPaper, hairline, brass, rust, sage, sageLight } = theme.colors;
 const { serif, mono } = theme.fonts;
-
-function friendlyError(msg) {
-  const m = String(msg || "");
-  if (/failed to fetch|networkerror|load failed|econnrefused|econnreset|connect/i.test(m)) {
-    return "The backend API is unreachable. Start it with `cd backend && npm run dev`, then Retry.";
-  }
-  return m;
-}
 
 export default function ClassesPage() {
   const { data: classes, loading, error, refresh } = useClasses();

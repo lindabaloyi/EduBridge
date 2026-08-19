@@ -11,6 +11,7 @@ import {
   handleSendMessage,
   handleMarkRead,
   handleDeleteMessage,
+  handleListGuardians,
 } from "../controllers/communicationController.js";
 
 const router = Router();
@@ -29,5 +30,8 @@ router.post("/messages", handleSendMessage);
 router.get("/messages/:id", handleGetMessage);
 router.patch("/messages/:id/read", handleMarkRead);
 router.delete("/messages/:id", handleDeleteMessage);
+
+// Recipients (guardians)
+router.get("/guardians", handleListGuardians);
 
 export { router as communicationRoutes };

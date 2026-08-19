@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Plus, Pencil, Trash2, Check, Send, Lock } from "lucide-react";
 import { SectionTitle } from "../../../components/common/SectionTitle";
 import { theme } from "../../../styles/themes";
-import { useReferences } from "../../gradebook/hooks/useReferences";
-import { useAssessments, createAssessment, updateAssessment, deleteAssessment, updateAssessmentStatus } from "../hooks/useAssessments";
+import { useReferences } from "../../../hooks/useReferences";
+import { useAssessments } from "../../../hooks/useAssessments";
+import { createAssessment, updateAssessment, deleteAssessment, updateAssessmentStatus } from "../../../api/assessments";
+import { friendlyError } from "../../../utils/errors";
 import AssessmentFormModal from "../components/AssessmentFormModal";
 
 const { ink, cardPaper, hairline, brass, rust, sage, sageLight } = theme.colors;
@@ -18,14 +20,6 @@ const NEXT_ACTION = {
   MODERATED: { status: "LOCKED", label: "Finalize", icon: Lock },
   LOCKED: null,
 };
-
-function friendlyError(msg) {
-  const m = String(msg || "");
-  if (/failed to fetch|networkerror|load failed|econnrefused|econnreset|connect/i.test(m)) {
-    return "The backend API is unreachable. Start it with `cd backend && npm run dev`, then Retry.";
-  }
-  return m;
-}
 
 export default function AssessmentsPage() {
   const ref = useReferences();
