@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Plus, Search, Pencil, Trash2, Eye } from "lucide-react";
 import { SectionTitle } from "../../../components/common/SectionTitle";
 import { theme } from "../../../styles/themes";
@@ -10,6 +11,7 @@ const { serif, mono } = theme.fonts;
 const ITEMS_PER_PAGE = 5;
 
 export default function TeachersPage() {
+  const navigate = useNavigate();
   const { data: teachers, loading, error, fetchTeachers, remove } = useTeachers();
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
@@ -195,7 +197,7 @@ export default function TeachersPage() {
                   <div className="flex gap-1.5">
                     <button
                       type="button"
-                      onClick={() => console.log("View teacher", t.id)}
+                      onClick={() => navigate(`/teachers/${t.id}`)}
                       title="View"
                       style={{
                         display: "inline-flex",

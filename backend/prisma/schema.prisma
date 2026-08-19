@@ -25,6 +25,8 @@ model School {
   assessments Assessment[]
   announcements Announcement[]
   messages Message[]
+  timetableEntries TimetableEntry[]
+  teacherPerformances TeacherPerformance[]
 }
 
 // ── User ───────────────────────────────────────────────────
@@ -94,10 +96,58 @@ model Teacher {
   schoolId   String
   school     School   @relation(fields: [schoolId], references: [id])
 
+  subjects  Subject[]            @relation("TeacherSubjects")
+  timetableEntries TimetableEntry[]
+  performances TeacherPerformance[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([schoolId, employeeNo])
+}
+
+// ── Timetable ───────────────────────────────────────────────
+model TimetableEntry {
+  id        String   @id @default(cuid())
+  dayOfWeek String
+  period    String
+  startTime String
+  endTime   String
+
+  teacherId String
+  teacher   Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  classId   String
+  class     Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  subjectId String
+  subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+  schoolId  String
+  school    School   @relation(fields: [schoolId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([teacherId, dayOfWeek, period])
+}
+
+// ── Teacher performance ─────────────────────────────────────
+model TeacherPerformance {
+  id        String   @id @default(cuid())
+  semester  String
+  score     Float
+
+  teacherId String
+  teacher   Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  schoolId  String
+  school    School   @relation(fields: [schoolId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([teacherId, semester])
 }
 
 // ── Parent ─────────────────────────────────────────────────
@@ -131,6 +181,7 @@ model Class {
   assessments Assessment[]
   announcements Announcement[]
   messages Message[]
+  timetableEntries TimetableEntry[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -145,7 +196,9 @@ model Subject {
   schoolId  String
   school    School   @relation(fields: [schoolId], references: [id])
 
-  assessments Assessment[]
+  assessments    Assessment[]
+  teachers       Teacher[]      @relation("TeacherSubjects")
+  timetableEntries TimetableEntry[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -4,6 +4,7 @@ import MainLayout from "../components/layout/MainLayout";
 import DashboardPage from "../features/dashboard/pages/DashboardPage";
 import StudentsPage from "../features/students/pages/StudentsPage";
 import TeachersPage from "../features/teachers/pages/TeachersPage";
+import TeacherProfilePage from "../features/teachers/pages/TeacherProfilePage";
 import AttendancePage from "../features/attendance/pages/AttendancePage";
 import ClassesPage from "../features/classes/pages/ClassesPage";
 import AssessmentsPage from "../features/assessments/pages/AssessmentsPage";
@@ -37,6 +38,7 @@ function AppRoutes() {
           <Route path="/" element={<DashboardPage />} />
           <Route path="/students" element={<StudentsPage />} />
           <Route path="/teachers" element={<TeachersPage />} />
+          <Route path="/teachers/:id" element={<TeacherProfilePage />} />
           <Route path="/attendance" element={<AttendancePage />} />
           <Route path="/classes" element={<ClassesPage />} />
           <Route path="/subjects" element={<SubjectsPage />} />

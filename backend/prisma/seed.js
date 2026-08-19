@@ -219,6 +219,35 @@ async function main() {
     await prisma.student.update({ where: { id: s.id }, data: { parentId: parent.id } })
   }
 
+  // Teacher profile data (subjects, timetable, performance)
+  const subs = await prisma.subject.findMany({ where: { schoolId: school.id } })
+  const prefSubs = ['MATH', 'PHYSCI', 'LIFESCI', 'ENG'].map((c) => subs.find((s) => s.code === c)).filter(Boolean)
+  const tSubs = (prefSubs.length >= 2 ? prefSubs : subs).slice(0, 2)
+  if (tSubs.length >= 2) {
+    await prisma.teacher.update({
+      where: { id: teacher.id },
+      data: { subjects: { set: tSubs.map((s) => ({ id: s.id })) } },
+    })
+    const [c1, c2, c3] = [grade9A, grade10A, grade9B]
+    const [s1, s2] = tSubs
+    const tr = [
+      { dayOfWeek: 'Monday', period: 'P1', startTime: '08:00', endTime: '08:45', classId: c1.id, subjectId: s1.id },
+      { dayOfWeek: 'Monday', period: 'P2', startTime: '08:50', endTime: '09:35', classId: c2.id, subjectId: s2.id },
+      { dayOfWeek: 'Tuesday', period: 'P1', startTime: '08:00', endTime: '08:45', classId: c3.id, subjectId: s1.id },
+      { dayOfWeek: 'Tuesday', period: 'P2', startTime: '08:50', endTime: '09:35', classId: c2.id, subjectId: s1.id },
+      { dayOfWeek: 'Wednesday', period: 'P1', startTime: '08:00', endTime: '08:45', classId: c1.id, subjectId: s2.id },
+    ]
+    await prisma.timetableEntry.createMany({
+      data: tr.map((r) => ({ ...r, teacherId: teacher.id, schoolId: school.id })),
+    })
+    await prisma.teacherPerformance.createMany({
+      data: [
+        { teacherId: teacher.id, semester: '1', score: 9.2, schoolId: school.id },
+        { teacherId: teacher.id, semester: '2', score: 8.6, schoolId: school.id },
+      ],
+    })
+  }
+
   // Academic years
   const currentYear = await prisma.academicYear.create({
     data: {

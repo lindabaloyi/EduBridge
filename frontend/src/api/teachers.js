@@ -4,6 +4,10 @@ export function fetchTeachers(schoolId) {
   return get(`/api/teachers${buildQuery({ schoolId })}`);
 }
 
+export function getTeacherById(id) {
+  return get(`/api/teachers/${id}`);
+}
+
 export function searchTeachers(searchTerm, schoolId) {
   return get(`/api/teachers/search${buildQuery({ q: searchTerm, schoolId })}`);
 }

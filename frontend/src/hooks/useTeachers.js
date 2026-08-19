@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import {
   fetchTeachers as fetchTeachersApi,
   searchTeachers as searchTeachersApi,
+  getTeacherById,
   createTeacher,
   updateTeacher,
   deleteTeacher,
@@ -46,6 +47,18 @@ export function useTeachers() {
   const create = useCallback(async (payload) => createTeacher(payload), []);
   const update = useCallback(async (id, payload) => updateTeacher(id, payload), []);
   const remove = useCallback(async (id) => deleteTeacher(id), []);
+  const fetchById = useCallback(async (id) => {
+    setLoading(true);
+    setError(null);
+    try {
+      return await getTeacherById(id);
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-  return { data, loading, error, fetchTeachers, search, create, update, remove };
+  return { data, loading, error, fetchTeachers, search, fetchById, create, update, remove };
 }

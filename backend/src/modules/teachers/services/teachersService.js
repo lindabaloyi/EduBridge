@@ -37,8 +37,61 @@ export async function getTeachers(schoolId) {
 }
 
 export async function getTeacherById(id) {
-  const t = await prisma.teacher.findUnique({ where: { id } });
-  return t ? serializeTeacher(t) : null;
+  const teacher = await prisma.teacher.findUnique({
+    where: { id },
+    include: {
+      school: true,
+      subjects: true,
+      performances: true,
+      timetableEntries: { include: { subject: true, class: true } },
+    },
+  });
+  if (!teacher) return null;
+
+  const classesMap = new Map();
+  teacher.timetableEntries.forEach((e) => {
+    if (e.class) classesMap.set(e.class.id, e.class);
+  });
+  let studentCount = 0;
+  for (const c of classesMap.values()) {
+    studentCount += await prisma.student.count({ where: { classId: c.id } });
+  }
+
+  return {
+    id: teacher.id,
+    employeeNo: teacher.employeeNo,
+    firstName: teacher.firstName,
+    lastName: teacher.lastName,
+    email: teacher.email,
+    schoolId: teacher.schoolId,
+    schoolName: teacher.school ? teacher.school.name : null,
+    joinedAt: teacher.createdAt,
+    subjects: (teacher.subjects || []).map((s) => ({ id: s.id, name: s.name, code: s.code })),
+    performances: (teacher.performances || []).map((p) => ({
+      semester: p.semester,
+      score: p.score,
+    })),
+    schedule: (teacher.timetableEntries || [])
+      .slice()
+      .sort((a, b) => (a.dayOfWeek + a.period).localeCompare(b.dayOfWeek + b.period))
+      .map((e) => ({
+        id: e.id,
+        dayOfWeek: e.dayOfWeek,
+        period: e.period,
+        startTime: e.startTime,
+        endTime: e.endTime,
+        subject: e.subject ? e.subject.name : null,
+        className: e.class ? e.class.name : null,
+        classGrade: e.class ? e.class.grade : null,
+      })),
+    classesTaught: Array.from(classesMap.values()).map((c) => ({
+      id: c.id,
+      name: c.name,
+      grade: c.grade,
+    })),
+    classCount: classesMap.size,
+    studentCount,
+  };
 }
 
 export async function createTeacher(payload) {
